@@ -1,5 +1,6 @@
 clear all
 warning off
+graphics_toolkit gnuplot
 %%%%%%% INITIALIZATION %%%%%%%%%%%%%%%%%
 Infty=50;
 nBitsPerFrame=2000;
@@ -44,13 +45,13 @@ for nEN = 1:length(snr_db) % SNR POINTS
         CODE_SYMBOLS=repmat(transpose(symbolBook),1,nSymPerFrame);
         REC_SIG=repmat(rec_sig,length(symbolBook),1);
         distance_mat=abs(CODE_SYMBOLS-REC_SIG);
-        [~, det_sym_ind]=min(distance_mat,[],1);        
-        detected_bits=[bitBook(det_sym_ind, :)]';      
-        
+        [~, det_sym_ind]=min(distance_mat,[],1);
+        detected_bits=[bitBook(det_sym_ind, :)]';
+
         err_ind= sym_vec-det_sym_ind;
         errsym=sum(err_ind~=0);
         errsyms(nEN)=errsyms(nEN)+errsym;
-        
+
         errbit = sum(sum(abs(info_matrix-detected_bits)));
         errbits(nEN)=errbits(nEN)+errbit;
         errbit_count=errbit_count+errbit;
@@ -59,7 +60,7 @@ for nEN = 1:length(snr_db) % SNR POINTS
         end
     end % End of while loop
     nFrames(nEN)=nframe;
-    
+
 end %end for (SNR points)
 
 BER_BFSK=errbits./nFrames/nBitsPerFrame;
@@ -74,8 +75,9 @@ semilogy(Eb_n0, theorerr,'s','Color','r');
 hold off
 xlabel("Noise Ratio_d_b");
 ylabel("Error Amount");
-legend('BER vs Eb/N_0'); 
+legend('BER vs Eb/N_0');
 axis square
 grid on
 set(gca,'FontSize',14);
 ylim([0.00001 1]);
+
